@@ -36,11 +36,17 @@ import type { GraphQLSchema } from '../type/schema';
 
 import { astFromValue } from './astFromValue';
 
-export function printSchema(schema: GraphQLSchema): string {
+export function printSchema(
+  schema: GraphQLSchema,
+  options?: {
+    disableFilterDirectives?: boolean;
+    disableFilterTypes?: boolean;
+  },
+): string {
   return printFilteredSchema(
     schema,
-    (n) => !isSpecifiedDirective(n),
-    isDefinedType,
+    (n) => options?.disableFilterDirectives || !isSpecifiedDirective(n),
+    (type) => options?.disableFilterTypes || isDefinedType(type),
   );
 }
 
@@ -52,7 +58,7 @@ function isDefinedType(type: GraphQLNamedType): boolean {
   return !isSpecifiedScalarType(type) && !isIntrospectionType(type);
 }
 
-function printFilteredSchema(
+export function printFilteredSchema(
   schema: GraphQLSchema,
   directiveFilter: (type: GraphQLDirective) => boolean,
   typeFilter: (type: GraphQLNamedType) => boolean,

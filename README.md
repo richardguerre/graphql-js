@@ -1,4 +1,8 @@
-# GraphQL.js
+> A copy of [graphql-js](https://github.com/graphql/graphql-js) with improvements such as
+> having an option in `printSchema` to not filter anything out
+> exporting `printFilteredSchema` to be able to print the schema with a custom filters.
+
+# Better GraphQL.js
 
 The JavaScript reference implementation for GraphQL, a query language for APIs created by Facebook.
 
