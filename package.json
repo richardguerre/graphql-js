@@ -3,7 +3,6 @@
   "version": "16.5.1",
   "description": "A copy of github.com/graphql/graphql-js with some improvements",
   "license": "MIT",
-  "private": true,
   "main": "index",
   "module": "index.mjs",
   "typesVersions": {
