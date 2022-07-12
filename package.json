@@ -1,6 +1,6 @@
 {
   "name": "better-graphql",
-  "version": "16.5.2",
+  "version": "16.6.0",
   "description": "A copy of github.com/graphql/graphql-js with some improvements",
   "license": "MIT",
   "main": "index",

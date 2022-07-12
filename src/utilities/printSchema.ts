@@ -1,6 +1,7 @@
 import { inspect } from '../jsutils/inspect';
 import { invariant } from '../jsutils/invariant';
 import type { Maybe } from '../jsutils/Maybe';
+import type { ConstArgumentNode, ConstDirectiveNode } from '../language';
 
 import { isPrintableAsBlockString } from '../language/blockString';
 import { Kind } from '../language/kinds';
@@ -219,17 +220,46 @@ function printInputObject(type: GraphQLInputObjectType): string {
 }
 
 function printFields(type: GraphQLObjectType | GraphQLInterfaceType): string {
-  const fields = Object.values(type.getFields()).map(
-    (f, i) =>
+  const fields = Object.values(type.getFields()).map((f, i) => {
+    const fieldDirectives = f.astNode?.directives ?? [];
+    return (
       printDescription(f, '  ', !i) +
       '  ' +
       f.name +
       printArgs(f.args, '  ') +
       ': ' +
       String(f.type) +
-      printDeprecated(f.deprecationReason),
-  );
+      printDeprecated(f.deprecationReason) +
+      printDirectives(fieldDirectives)
+    );
+  });
   return printBlock(fields);
+}
+
+function printDirectives(directives: readonly ConstDirectiveNode[]): string {
+  const directiveStrings = directives
+    .map((directive) => {
+      const directiveArgs = directive.arguments?.length
+        ? ' ' + directive.arguments.map((arg) => printArgument(arg)).join(', ')
+        : '';
+      return (
+        directive.loc?.source.body.slice(
+          directive.loc.start,
+          directive.loc.end,
+        ) ?? `@${directive.name.value}(${directiveArgs})`
+      );
+    })
+    .join(' ');
+  return directiveStrings ? ' ' + directiveStrings : '';
+}
+
+function printArgument(arg: ConstArgumentNode): string {
+  if (arg.value.kind === Kind.NULL) return `${arg.name.value}: null`;
+  if ('values' in arg.value)
+    return `${arg.name.value}: ${JSON.stringify(arg.value.values)}`;
+  if ('value' in arg.value)
+    return `${arg.name.value}: ${JSON.stringify(arg.value.value)}`;
+  return '';
 }
 
 function printBlock(items: ReadonlyArray<string>): string {
