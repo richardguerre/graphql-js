@@ -57,14 +57,7 @@ export function UniqueFieldDefinitionNamesRule(
     for (const fieldDef of fieldNodes) {
       const fieldName = fieldDef.name.value;
 
-      if (hasField(existingTypeMap[typeName], fieldName)) {
-        context.reportError(
-          new GraphQLError(
-            `Field "${typeName}.${fieldName}" already exists in the schema. It cannot also be defined in this type extension.`,
-            { nodes: fieldDef.name },
-          ),
-        );
-      } else if (fieldNames[fieldName]) {
+      if (fieldNames[fieldName]) {
         context.reportError(
           new GraphQLError(
             `Field "${typeName}.${fieldName}" can only be defined once.`,
@@ -78,11 +71,4 @@ export function UniqueFieldDefinitionNamesRule(
 
     return false;
   }
-}
-
-function hasField(type: GraphQLNamedType, fieldName: string): boolean {
-  if (isObjectType(type) || isInterfaceType(type) || isInputObjectType(type)) {
-    return type.getFields()[fieldName] != null;
-  }
-  return false;
 }
