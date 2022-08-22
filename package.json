@@ -46,7 +46,7 @@
     "build:website": "DOCUSAURUS_GENERATED_FILES_DIR_NAME=\"$(pwd)/.docusaurus\" docusaurus build --out-dir=\"$(pwd)/websiteDist\" ./website",
     "build:npm": "node resources/build-npm.js",
     "build:deno": "node resources/build-deno.js",
-    "custom:publish": "np --branch 16.x.x --no-tests --contents=npmDist",
+    "custom:publish": "cd npmDist && np --branch 16.x.x --no-tests",
     "gitpublish:npm": "bash ./resources/gitpublish.sh npm npmDist",
     "gitpublish:deno": "bash ./resources/gitpublish.sh deno denoDist"
   },
