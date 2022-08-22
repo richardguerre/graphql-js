@@ -221,7 +221,9 @@ function printInputObject(type: GraphQLInputObjectType): string {
 
 function printFields(type: GraphQLObjectType | GraphQLInterfaceType): string {
   const fields = Object.values(type.getFields()).map((f, i) => {
-    const fieldDirectives = f.astNode?.directives ?? [];
+    const fieldDirectives = (f.astNode?.directives ?? []).filter(
+      (d) => d.name.value !== 'deprecated',
+    );
     return (
       printDescription(f, '  ', !i) +
       '  ' +
